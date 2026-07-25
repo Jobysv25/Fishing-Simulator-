@@ -7,6 +7,11 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!-- Background Music -->
+    <audio id="bgMusic" loop volume="0.3">
+        <source src="data:audio/wav;base64,UklGRiYAAABXQVZFZm10IBAAAAABAAEAQB8AAAB9AAACABAAZGF0YQIAAAAAAA==" type="audio/wav">
+    </audio>
+
     <div class="container">
         <!-- Left side: Game canvas -->
         <div class="game-section">
@@ -56,6 +61,13 @@
                 </div>
 
                 <div class="stats-box">
+                    <h3>🎵 Music</h3>
+                    <button class="music-btn" id="musicBtn" onclick="toggleMusic()">
+                        🔊 Music ON
+                    </button>
+                </div>
+
+                <div class="stats-box">
                     <h3>🛍️ Shop - Baits</h3>
                     <div id="baitShop" class="shop-items"></div>
                 </div>
@@ -68,6 +80,7 @@
         </div>
     </div>
 
+    <script src="music-generator.js"></script>
     <script src="game.js"></script>
 </body>
 </html>
