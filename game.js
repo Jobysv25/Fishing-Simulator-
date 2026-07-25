@@ -151,12 +151,25 @@ const water = {
 const seagulls = [];
 let seagullTimer = 0;
 
+// Jumping Fish
+const jumpingFish = [];
+let silverFishTimer = 0;
+let yellowFishTimer = 0;
+
 // Initialize
 function init() {
     updateUI();
     gameLoop();
     spawnSeagull();
     setInterval(spawnSeagull, 60000); // Spawn seagull every minute
+    
+    // Silver fish spawn every 1 minute
+    setInterval(spawnSilverFish, 60000);
+    spawnSilverFish(); // Spawn first one immediately
+    
+    // Yellow fish spawn every 10 minutes
+    setInterval(spawnYellowFish, 600000);
+    spawnYellowFish(); // Spawn first one immediately
 }
 
 // Main game loop
@@ -184,6 +197,10 @@ function gameLoop() {
 
     // Draw water
     drawWater();
+
+    // Draw jumping fish
+    updateJumpingFish();
+    drawJumpingFish();
 
     // Draw seagulls
     updateSeagulls();
@@ -398,6 +415,96 @@ function spawnSeagull() {
     });
 }
 
+// Jumping Fish Functions
+function drawJumpingFish() {
+    for (let fish of jumpingFish) {
+        // Calculate jump arc
+        const jumpProgress = fish.time / fish.jumpDuration;
+        const yOffset = Math.sin(jumpProgress * Math.PI) * fish.jumpHeight;
+        
+        const fishX = fish.startX + (fish.endX - fish.startX) * jumpProgress;
+        const fishY = fish.startY - yOffset;
+        
+        // Draw fish body
+        ctx.fillStyle = fish.color;
+        ctx.beginPath();
+        ctx.ellipse(fishX, fishY, 20, 12, fish.angle, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Draw tail
+        ctx.fillStyle = fish.color;
+        ctx.beginPath();
+        ctx.moveTo(fishX - 20, fishY);
+        ctx.lineTo(fishX - 35, fishY - 10);
+        ctx.lineTo(fishX - 35, fishY + 10);
+        ctx.fill();
+        
+        // Draw eye
+        ctx.fillStyle = '#000';
+        ctx.beginPath();
+        ctx.arc(fishX + 15, fishY - 5, 2, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Draw shine
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+        ctx.beginPath();
+        ctx.arc(fishX + 10, fishY - 8, 3, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Draw clickable area (invisible)
+        fish.x = fishX;
+        fish.y = fishY;
+    }
+}
+
+function updateJumpingFish() {
+    for (let i = jumpingFish.length - 1; i >= 0; i--) {
+        jumpingFish[i].time += 16.67;
+        
+        if (jumpingFish[i].time >= jumpingFish[i].jumpDuration) {
+            jumpingFish.splice(i, 1);
+        }
+    }
+}
+
+function spawnSilverFish() {
+    jumpingFish.push({
+        startX: 200 + Math.random() * 400,
+        startY: water.y,
+        endX: 250 + Math.random() * 300,
+        jumpHeight: 100,
+        jumpDuration: 1500,
+        time: 0,
+        color: '#C0C0C0', // Silver/Grey
+        angle: 0,
+        type: 'silver',
+        reward: 1000,
+        x: 0,
+        y: 0
+    });
+    
+    showNotification('🐟 Silver fish jumped! Click it! $1,000');
+}
+
+function spawnYellowFish() {
+    jumpingFish.push({
+        startX: 200 + Math.random() * 400,
+        startY: water.y,
+        endX: 250 + Math.random() * 300,
+        jumpHeight: 120,
+        jumpDuration: 2000,
+        time: 0,
+        color: '#FFD700', // Yellow/Gold
+        angle: 0,
+        type: 'yellow',
+        reward: 1000000,
+        x: 0,
+        y: 0
+    });
+    
+    showNotification('💛 RARE YELLOW FISH! Click it! $1,000,000');
+}
+
 function getCatchableRarities() {
     let totalRarity = 0;
     for (let fish in fishData) {
@@ -458,6 +565,19 @@ function caughtFish() {
     gameState.inventory[fish] = (gameState.inventory[fish] || 0) + 1;
     
     showNotification(`🎣 Caught ${fish}!`);
+    updateUI();
+}
+
+function clickJumpingFish(fish) {
+    gameState.money += fish.reward;
+    showNotification(`💰 Caught a ${fish.type === 'yellow' ? 'YELLOW' : 'SILVER'} fish! +$${fish.reward}`);
+    
+    // Remove the fish
+    const index = jumpingFish.indexOf(fish);
+    if (index > -1) {
+        jumpingFish.splice(index, 1);
+    }
+    
     updateUI();
 }
 
@@ -640,6 +760,15 @@ canvas.addEventListener('click', (e) => {
     const rect = canvas.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
+    
+    // Check if click is on jumping fish
+    for (let fish of jumpingFish) {
+        const distance = Math.sqrt((x - fish.x) ** 2 + (y - fish.y) ** 2);
+        if (distance < 25) {
+            clickJumpingFish(fish);
+            return;
+        }
+    }
     
     // Check if click is on pole
     const tipX = pole.x + Math.cos(pole.angle) * pole.length;
