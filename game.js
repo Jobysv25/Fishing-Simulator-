@@ -670,6 +670,22 @@ function toggleSunset() {
     updateUI();
 }
 
+function toggleMusic() {
+    musicEnabled = !musicEnabled;
+    const btn = document.getElementById('musicBtn');
+    
+    if (musicEnabled) {
+        btn.innerHTML = '🔊 Music ON';
+        btn.style.background = 'linear-gradient(135deg, #2ecc71 0%, #27ae60 100%)';
+        if (!musicStarted) {
+            initializeMusic();
+        }
+    } else {
+        btn.innerHTML = '🔇 Music OFF';
+        btn.style.background = 'linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%)';
+    }
+}
+
 function updateUI() {
     // Money display
     document.getElementById('moneyDisplay').textContent = `$${gameState.money}`;
