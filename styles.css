@@ -139,6 +139,32 @@ body {
     transform: none;
 }
 
+.weather-btn {
+    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    width: 100%;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.weather-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(52, 152, 219, 0.4);
+}
+
+.sunset-cost {
+    display: block;
+    font-size: 11px;
+    opacity: 0.9;
+    margin-top: 3px;
+}
+
 .shop-items {
     display: flex;
     flex-direction: column;
