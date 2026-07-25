@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fishing Simulator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Left side: Game canvas -->
+        <div class="game-section">
+            <canvas id="gameCanvas" width="800" height="600"></canvas>
+        </div>
+
+        <!-- Right side: UI Panel -->
+        <div class="ui-panel">
+            <div class="stats-container">
+                <h2>Fishing Simulator</h2>
+                
+                <div class="stats-box">
+                    <h3>💰 Money</h3>
+                    <p id="moneyDisplay">$0</p>
+                </div>
+
+                <div class="stats-box">
+                    <h3>🎣 Inventory</h3>
+                    <div id="inventory" class="inventory-list">
+                        <p>No fish caught yet</p>
+                    </div>
+                </div>
+
+                <div class="stats-box">
+                    <h3>🛒 Sell Fish</h3>
+                    <div id="sellOptions" class="sell-options">
+                        <button class="sell-btn" onclick="sellAllFish()">Sell All Fish</button>
+                        <div id="fishPrices" class="fish-prices"></div>
+                    </div>
+                </div>
+
+                <div class="stats-box">
+                    <h3>🎣 Current Rod</h3>
+                    <p id="rodDisplay">Basic Rod</p>
+                </div>
+
+                <div class="stats-box">
+                    <h3>🪱 Current Bait</h3>
+                    <p id="baitDisplay">Trash Bait</p>
+                </div>
+
+                <div class="stats-box">
+                    <h3>🛍️ Shop - Baits</h3>
+                    <div id="baitShop" class="shop-items"></div>
+                </div>
+
+                <div class="stats-box">
+                    <h3>🎣 Shop - Rods</h3>
+                    <div id="rodShop" class="shop-items"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
